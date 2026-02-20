@@ -1,13 +1,9 @@
-
 {% extends "layout.html" %}
 
 {% block container %}
 
-
-
-
 <div class="max-w-6xl mx-auto mt-8">
-    <a href="Alumnos.html"
+    <a href="Alumnos"
        class="block w-full text-center mb-4 text-white bg-blue-600 hover:bg-blue-700 
               focus:ring-4 focus:ring-blue-300 font-medium rounded-lg 
               text-sm px-5 py-3 shadow-md transition">
@@ -28,113 +24,33 @@
                 </tr>
             </thead>
 
-            <!-- CUERPO -->
             <tbody>
+                {% for alumn in alumno %}
                 <tr class="bg-white border-b hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-900">Alberto Baruch</td>
-                    <td class="px-6 py-4">Mendoza</td>
-                    <td class="px-6 py-4">alberto.M@gmail.com</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">{{ alumn.nombre }}</td>
+                    <td class="px-6 py-4">{{ alumn.apaterno }}</td>
+                    <td class="px-6 py-4">{{ alumn.email }}</td>
+                    
                     <td class="px-6 py-4 text-center">
                         <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-xs shadow">
                             Editar
                         </button>
                     </td>
+                    
                     <td class="px-6 py-4 text-center">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs shadow">
+                        <a href="{{ url_for('detalles', id=alumn.id) }}"
+                           class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-md text-xs shadow">
                             Detalles
-                        </button>
+                        </a>
                     </td>
+                    
                     <td class="px-6 py-4 text-center">
                         <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-xs shadow">
                             Eliminar
                         </button>
                     </td>
                 </tr>
-
-                <tr class="bg-white border-b hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-900">Juan Pedro</td>
-                    <td class="px-6 py-4">Conchas</td>
-                    <td class="px-6 py-4">peterpintado@gmail.com</td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Editar
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Detalles
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-
-                <tr class="bg-white border-b hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-900">Emiliano</td>
-                    <td class="px-6 py-4">Lozano</td>
-                    <td class="px-6 py-4">Lemiliano@gmail.com</td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Editar
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Detalles
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-
-                <tr class="bg-white border-b hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-900">Melchor</td>
-                    <td class="px-6 py-4">Ruiz</td>
-                    <td class="px-6 py-4">rmelchor@gmail.com</td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Editar
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Detalles
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-
-                <tr class="bg-white hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-900">Paulina</td>
-                    <td class="px-6 py-4">Aviña</td>
-                    <td class="px-6 py-4">aPaulina@gmail.com</td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Editar
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Detalles
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-
+                {% endfor %}
             </tbody>
         </table>
     </div>

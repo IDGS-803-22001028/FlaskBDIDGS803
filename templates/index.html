@@ -28,9 +28,10 @@
                 {% for alumn in alumno %}
                 <tr class="bg-white border-b hover:bg-gray-50">
                     <td class="px-6 py-4 font-medium text-gray-900">{{ alumn.nombre }}</td>
-                    <td class="px-6 py-4">{{ alumn.apaterno }}</td>
+                    <td class="px-6 py-4">{{ alumn.apellidos }}</td>
                     <td class="px-6 py-4">{{ alumn.email }}</td>
-                    
+                    <td class="px-6 py-4">{{ alumn.telefono }}</td>
+
                     <td class="px-6 py-4 text-center">
                         <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-xs shadow">
                              <a href="{{ url_for('modificar', id=alumn.id) }}">

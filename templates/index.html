@@ -33,7 +33,8 @@
                     
                     <td class="px-6 py-4 text-center">
                         <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Editar
+                             <a href="{{ url_for('modificar', id=alumn.id) }}">
+                           Editar
                         </button>
                     </td>
                     
@@ -45,8 +46,9 @@
                     </td>
                     
                     <td class="px-6 py-4 text-center">
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-xs shadow">
-                            Eliminar
+                        <button class="bg-red-500 hover:bg-red-600  text-white px-3 py-1 rounded-md text-xs shadow">
+                             <a href="{{ url_for('eliminar', id=alumn.id) }}">
+                           Eliminar
                         </button>
                     </td>
                 </tr>

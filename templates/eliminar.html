@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block container %}
+<div class="max-w-sm mx-auto mt-10">
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium">Id</label>
+            {{ form.id(class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5") }}
+        </div>
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium">Nombre</label>
+            {{ form.nombre(class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5") }}
+        </div>
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium">Apellidos</label>
+            {{ form.apaterno(class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5") }}
+        </div>
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium">Correo</label>
+            {{ form.email(class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5") }}
+        </div>
+        
+        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
+            Eliminar
+        </button>
+    </form>
+</div>
+{% endblock %}

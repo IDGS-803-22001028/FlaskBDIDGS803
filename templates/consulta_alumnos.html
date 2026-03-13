@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block container %}
+
+<div class="max-w-4xl mx-auto mt-8">
+    <h1 class="text-3xl font-bold mb-6 text-gray-900">Consulta: Alumnos por Curso</h1>
+
+    <!-- Formulario de búsqueda -->
+    <div class="bg-white p-6 border border-gray-200 rounded-lg shadow mb-6">
+        <form method="POST" class="flex gap-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="flex-1">
+                <label class="block mb-2 text-sm font-medium text-gray-700">Selecciona un curso:</label>
+                <select name="curso" class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5" required>
+                    <option value="">-- Elige un curso --</option>
+                    {% for curso in cursos %}
+                    <option value="{{ curso.id }}">{{ curso.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-2.5 shadow">
+                    Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Resultados -->
+    {% if alumnos %}
+    <div class="bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
+        <div class="bg-gray-100 px-6 py-4 border-b">
+            <h2 class="text-xl font-bold text-gray-900">Alumnos inscritos</h2>
+        </div>
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-600">
+                <thead class="text-xs uppercase bg-gray-50 text-gray-700">
+                    <tr>
+                        <th class="px-6 py-3">ID</th>
+                        <th class="px-6 py-3">Nombre</th>
+                        <th class="px-6 py-3">Apellidos</th>
+                        <th class="px-6 py-3">Email</th>
+                        <th class="px-6 py-3">Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alumno in alumnos %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-6 py-4 font-medium">{{ alumno.id }}</td>
+                        <td class="px-6 py-4">{{ alumno.nombre }}</td>
+                        <td class="px-6 py-4">{{ alumno.apellidos }}</td>
+                        <td class="px-6 py-4">{{ alumno.email }}</td>
+                        <td class="px-6 py-4">{{ alumno.telefono }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="bg-gray-50 px-6 py-4 border-t text-sm text-gray-600">
+            Total: <strong>{{ alumnos|length }}</strong> alumno(s)
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

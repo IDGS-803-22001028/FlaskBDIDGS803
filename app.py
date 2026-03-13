@@ -1,109 +1,169 @@
-from flask import Flask, render_template,request, redirect,url_for
-from flask import flash
+﻿from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_wtf.csrf import CSRFProtect
-from config import DevelopmentConfig
-from flask import g
 from flask_migrate import Migrate
-import forms
+from config import DevelopmentConfig
 
-from models import db
-from models import Alumnos
+from maestros import maestros
+from cursos import cursos
+from consultas import consultas
+from inscripciones import inscripciones
+
+import forms
+from models import db, Alumnos, Maestros, Curso, Inscripciones
+
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
-db.init_app(app)
-migrate = Migrate(app,db)
-csrf=CSRFProtect()
 
+csrf = CSRFProtect(app)
+db.init_app(app)
+migrate = Migrate(app, db)
+
+app.register_blueprint(maestros)
+app.register_blueprint(cursos)
+app.register_blueprint(consultas)
+app.register_blueprint(inscripciones)
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'),404
+    return render_template('404.html'), 404
 
+@app.route('/')
+def home():
+    return render_template('bienvenida.html')
 
-
-
-@app.route("/",methods=['GET','POST'])
-@app.route("/index")
+@app.route('/index')
 def index():
-    create_form=forms.UserForm(request.form)
-    alumno=Alumnos.query.all()
-    return render_template("index.html", form=create_form, alumno=alumno)
+    form = forms.UserForm(request.form)
+    alumnos = Alumnos.query.all()
+    return render_template('index.html', form=form, alumno=alumnos)
 
-
-@app.route("/Alumnos", methods=['GET', 'POST'])
+@app.route('/Alumnos', methods=['GET','POST'])
 def alumnos():
-    create_form = forms.UserForm(request.form)
-    if request.method == 'POST' and create_form.validate():
-        # Corregido: cretae_form -> create_form
-        alum = Alumnos(nombre=create_form.nombre.data,
-                       apellidos=create_form.apellidos.data,
-                       email=create_form.email.data,
-                       telefono=create_form.telefono.data)
+    form = forms.UserForm(request.form)
+    if request.method == 'POST' and form.validate():
+        alum = Alumnos(
+            nombre=form.nombre.data,
+            apellidos=form.apellidos.data,
+            email=form.email.data,
+            telefono=form.telefono.data
+        )
         db.session.add(alum)
         db.session.commit()
+        flash('Alumno creado correctamente', 'success')
         return redirect(url_for('index'))
-    return render_template("Alumnos.html", form=create_form)
+    return render_template('Alumnos.html', form=form)
 
-
-@app.route("/detalles",methods=['GET','POST'])
+@app.route('/detalles', methods=['GET'])
 def detalles():
-    create_form=forms.UserForm(request.form)
-    if request.method =='GET':
-        id=request.args.get('id')
-        alum1=db.session.query(Alumnos).filter(Alumnos.id==id).first()
-        id=request.args.get('id')
-        nombre=alum1.nombre
-        apellidos=alum1.apellidos
-        email=alum1.email
-        telefono=alum1.telefono
-    return render_template("detalles.html", nombre=nombre,
-                            apellidos=apellidos,email=email, telefono=telefono)
+    alumno_id = request.args.get('id')
+    alumno = Alumnos.query.get_or_404(alumno_id)
+    return render_template('detalles.html', nombre=alumno.nombre, apellidos=alumno.apellidos,
+                           email=alumno.email, telefono=alumno.telefono)
 
-@app.route("/modificar",methods=['GET','POST'])
+@app.route('/modificar', methods=['GET','POST'])
 def modificar():
-    create_form=forms.UserForm(request.form)
-    if request.method =='GET':
-        id=request.args.get('id')
-        alum1=db.session.query(Alumnos).filter(Alumnos.id==id).first()
-        create_form.id.data=request.args.get('id')
-        create_form.nombre.data=alum1.nombre
-        create_form.apellidos.data=alum1.apellidos
-        create_form.email.data=alum1.email
-        create_form.telefono.data=alum1.telefono
-    if request.method =='POST':
-        id=create_form.id.data
-        alum1=db.session.query(Alumnos).filter(Alumnos.id==id).first()
-        alum1.nombre=create_form.nombre.data
-        alum1.apellidos=create_form.apellidos.data
-        alum1.email=create_form.email.data
-        alum1.telefono=create_form.telefono.data
-        db.session.add(alum1)
-        db.session.commit()
-        return redirect(url_for('index'))
-    return render_template("modificar.html",form=create_form)
+    form = forms.UserForm(request.form)
+    if request.method == 'GET':
+        alumno_id = request.args.get('id')
+        alumno = Alumnos.query.get_or_404(alumno_id)
+        form.id.data = alumno.id
+        form.nombre.data = alumno.nombre
+        form.apellidos.data = alumno.apellidos
+        form.email.data = alumno.email
+        form.telefono.data = alumno.telefono
+        return render_template('modificar.html', form=form)
 
-@app.route("/eliminar",methods=['GET','POST'])
-def eliminar():
-    create_form=forms.UserForm(request.form)
-    if request.method =='GET':
-        id=request.args.get('id')
-        alum1=db.session.query(Alumnos).filter(Alumnos.id==id).first()
-        create_form.id.data=request.args.get('id')
-        create_form.nombre.data=alum1.nombre
-        create_form.apellidos.data=alum1.apellidos
-        create_form.email.data=alum1.email
-        create_form.telefono.data=alum1.telefono
-    if request.method == 'POST':
-        id=request.args.get('id')
-        alum = Alumnos.query.get(id)
-        db.session.delete(alum)
+    if form.validate():
+        alumno = Alumnos.query.get_or_404(form.id.data)
+        alumno.nombre = form.nombre.data
+        alumno.apellidos = form.apellidos.data
+        alumno.email = form.email.data
+        alumno.telefono = form.telefono.data
         db.session.commit()
+        flash('Alumno actualizado correctamente', 'success')
         return redirect(url_for('index'))
-    return render_template("eliminar.html",form=create_form)
+
+    return render_template('modificar.html', form=form)
+
+@app.route('/eliminar', methods=['GET','POST'])
+def eliminar():
+    form = forms.UserForm(request.form)
+    if request.method == 'GET':
+        alumno_id = request.args.get('id')
+        alumno = Alumnos.query.get_or_404(alumno_id)
+        form.id.data = alumno.id
+        form.nombre.data = alumno.nombre
+        form.apellidos.data = alumno.apellidos
+        form.email.data = alumno.email
+        form.telefono.data = alumno.telefono
+        return render_template('eliminar.html', form=form)
+
+    alumno = Alumnos.query.get_or_404(request.args.get('id'))
+    db.session.delete(alumno)
+    db.session.commit()
+    flash('Alumno eliminado correctamente', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/MaestrosAdd', methods=['GET','POST'])
+def crearMaestros():
+    form = forms.MaestroForm(request.form)
+    if request.method == 'POST' and form.validate():
+        existing = Maestros.query.filter_by(matricula=form.matricula.data).first()
+        if existing:
+            flash('Ya existe un maestro con esta matricula', 'danger')
+            return render_template('crearMaes.html', form=form)
+
+        maestro = Maestros(
+            matricula=form.matricula.data,
+            nombre=form.nombre.data,
+            apellidos=form.apellidos.data,
+            especialidad=form.especialidad.data,
+            email=form.email.data
+        )
+        db.session.add(maestro)
+        db.session.commit()
+        flash('Maestro creado correctamente', 'success')
+        return redirect(url_for('maestros.listado_maestros'))
+    return render_template('crearMaes.html', form=form)
+
+@app.route('/detallesMaes/<int:matricula>', methods=['GET'])
+def detallesMaes(matricula):
+    maestro = Maestros.query.get_or_404(matricula)
+    return render_template('detallesMaes.html', nombre=maestro.nombre,
+                          apellidos=maestro.apellidos,
+                          especialidad=maestro.especialidad,
+                          email=maestro.email)
+
+@app.route('/modificarMaes/<int:matricula>', methods=['GET','POST'])
+def modificarMaes(matricula):
+    maestro = Maestros.query.get_or_404(matricula)
+    form = forms.MaestroForm(request.form, obj=maestro)
+
+    if request.method == 'POST' and form.validate():
+        maestro.nombre = form.nombre.data
+        maestro.apellidos = form.apellidos.data
+        maestro.especialidad = form.especialidad.data
+        maestro.email = form.email.data
+        db.session.commit()
+        flash('Maestro actualizado', 'success')
+        return redirect(url_for('maestros.listado_maestros'))
+
+    return render_template('modificarMaes.html', form=form)
+
+@app.route('/eliminarMaes/<int:matricula>', methods=['GET','POST'])
+def eliminarMaes(matricula):
+    maestro = Maestros.query.get_or_404(matricula)
+    form = forms.MaestroForm(request.form, obj=maestro)
+
+    if request.method == 'POST':
+        db.session.delete(maestro)
+        db.session.commit()
+        flash('Maestro eliminado', 'success')
+        return redirect(url_for('maestros.listado_maestros'))
+
+    return render_template('eliminarMaes.html', form=form)
 
 if __name__ == '__main__':
-    csrf.init_app(app)
     with app.app_context():
         db.create_all()
-app.run()
-
+    app.run(debug=True)

@@ -19,3 +19,21 @@ class UserForm(Form):
         validators.Regexp(r'^\d{10}$', message='El teléfono debe contener exactamente 10 dígitos')
     ])
   
+
+class MaestroForm(Form):
+    matricula = IntegerField('matricula', [
+        validators.DataRequired()
+    ])
+    nombre = StringField('nombre', [
+        validators.DataRequired()
+    ])
+    apellidos = StringField('apellidos', [
+        validators.DataRequired()
+    ])
+    especialidad = StringField('especialidad', [
+        validators.DataRequired()
+    ])
+    email = EmailField('correo', [
+        validators.DataRequired(),
+        validators.Email()
+    ])

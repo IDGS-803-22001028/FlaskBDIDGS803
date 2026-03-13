@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% block container %}
+
+<div class="max-w-sm mx-auto mt-10">
+    <h1 class="text-2xl font-semibold mb-6">Modificar curso</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium">Nombre del Curso</label>
+            <input type="text" name="nombre" value="{{ curso.nombre }}" class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5" required />
+        </div>
+
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium">Descripción</label>
+            <textarea name="descripcion" class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5">{{ curso.descripcion }}</textarea>
+        </div>
+
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium">Maestro</label>
+            <select name="maestro" class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5" required>
+                {% for maestro in maestros %}
+                <option value="{{ maestro.matricula }}" {% if maestro.matricula == curso.maestro_id %}selected{% endif %}>{{ maestro.nombre }} {{ maestro.apellidos }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="flex items-center justify-between">
+            <a href="{{ url_for('cursos.listado_cursos') }}" class="text-blue-600 hover:underline">Volver</a>
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
